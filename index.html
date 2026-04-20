@@ -792,22 +792,45 @@ a, button, [onclick] { -webkit-tap-highlight-color: transparent; outline: none; 
 </div>
 
 <!-- ═══════ PUBLICATIONS ═══════ -->
+<!--
+  ╔══════════════════════════════════════════════════════════════════════╗
+  ║  PUBLICATIONS — AUTO-UPDATE SYSTEM                                  ║
+  ║                                                                     ║
+  ║  HOW IT WORKS:                                                      ║
+  ║  1. ORCID API (live) — fetches publication list on every page load  ║
+  ║     ORCID: 0000-0002-5489-9918  (Dr. Ravi V. Mural)                ║
+  ║     Add a paper: log into orcid.org → it appears here automatically ║
+  ║                                                                     ║
+  ║  2. GitHub Action (monthly) — updates citation counts               ║
+  ║     Workflow: .github/workflows/update_citations.yml                ║
+  ║     Script:   scripts/fetch_citations.py                            ║
+  ║     Output:   data/citation_counts.json  (read by this page)        ║
+  ║                                                                     ║
+  ║  TOPIC TAGGING:                                                     ║
+  ║  Auto-assigned by keyword matching (see tagTopic() in JS).          ║
+  ║  Manual override: add DOI+topic to TOPIC_OVERRIDES object in JS.    ║
+  ║                                                                     ║
+  ║  🚩 ADD A LAB MEMBER: find LAB_ORCIDS in JS and add their ORCID.   ║
+  ╚══════════════════════════════════════════════════════════════════════╝
+-->
 <div class="page" id="page-publications">
   <div class="page-hero"><div class="page-hero-inner">
     <div class="page-hero-label">Scholarly Work</div>
     <h2>Publications</h2>
-    <p>For a complete list visit <a href="https://scholar.google.com/citations?user=5NlUnZ0AAAAJ&hl=en&oi=ao" target="_blank" style="color:var(--gold);">Google Scholar</a></p>
+    <p>Auto-updated from ORCID &middot; Citation counts refreshed monthly &middot;
+      <a href="https://scholar.google.com/citations?user=5NlUnZ0AAAAJ&hl=en&oi=ao"
+         target="_blank" style="color:var(--gold);">Google Scholar</a>
+    </p>
   </div></div>
   <div class="section"><div class="section-inner">
 
+    <!-- ── FILTERS ── -->
     <div class="pub-filter-selects">
       <div class="pub-filter-select-group">
         <label for="year-select">Filter by Year</label>
         <select class="pub-select" id="year-select" onchange="applyFilter()">
           <option value="all">All Years</option>
-          <option value="2024">2024</option>
-          <option value="2023">2023</option>
-          <option value="2022">2022</option>
+          <!-- Year options rebuilt dynamically when ORCID data loads -->
         </select>
       </div>
       <div class="pub-filter-select-group">
@@ -823,106 +846,26 @@ a, button, [onclick] { -webkit-tap-highlight-color: transparent; outline: none; 
       </div>
     </div>
 
-    <div id="pub-list-container">
-
-      <div class="pub-year-group" data-year-group="2024">
-        <div class="pub-year">2024</div>
-        <div class="pub-item" data-year="2024" data-topic="quantitative-genetics">
-          <a class="pub-title-link" href="https://doi.org/10.1111/pce.14000" target="_blank">Genome-wide association study reveals novel loci for drought tolerance in maize</a>
-          <div class="pub-authors">Mural RV, Assefa E, et al.</div>
-          <div class="pub-journal">Plant Cell &amp; Environment · 2024</div>
-          <div class="pub-meta-row">
-            <a class="pub-doi-link" href="https://doi.org/10.1111/pce.14000" target="_blank">DOI: 10.1111/pce.14000</a>
-            <span class="pub-cite-count">🎓 <span class="cite-num" data-scholar-id="pub1">—</span> citations</span>
-            <button class="pub-cite-btn" onclick="openCiteModal('pub1')">Cite</button>
-          </div>
-        </div>
-        <div class="pub-item" data-year="2024" data-topic="quantitative-genetics">
-          <a class="pub-title-link" href="https://doi.org/10.1093/g3journal/jkad200" target="_blank">Genomic prediction accuracy for yield-related traits in diverse sorghum panels</a>
-          <div class="pub-authors">Mural RV, et al.</div>
-          <div class="pub-journal">G3: Genes, Genomes, Genetics · 2024</div>
-          <div class="pub-meta-row">
-            <a class="pub-doi-link" href="https://doi.org/10.1093/g3journal/jkad200" target="_blank">DOI: 10.1093/g3journal/jkad200</a>
-            <span class="pub-cite-count">🎓 <span class="cite-num" data-scholar-id="pub2">—</span> citations</span>
-            <button class="pub-cite-btn" onclick="openCiteModal('pub2')">Cite</button>
-          </div>
-        </div>
-        <div class="pub-item" data-year="2024" data-topic="ai-ml">
-          <a class="pub-title-link" href="https://doi.org/10.34133/plantphenomics.0089" target="_blank">Deep learning for genomic prediction: integrating SNP data and environmental covariates in crop breeding</a>
-          <div class="pub-authors">Mural RV, et al.</div>
-          <div class="pub-journal">Plant Phenomics · 2024</div>
-          <div class="pub-meta-row">
-            <a class="pub-doi-link" href="https://doi.org/10.34133/plantphenomics.0089" target="_blank">DOI: 10.34133/plantphenomics.0089</a>
-            <span class="pub-cite-count">🎓 <span class="cite-num" data-scholar-id="pub3">—</span> citations</span>
-            <button class="pub-cite-btn" onclick="openCiteModal('pub3')">Cite</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="pub-year-group" data-year-group="2023">
-        <div class="pub-year">2023</div>
-        <div class="pub-item" data-year="2023" data-topic="quantitative-genetics">
-          <a class="pub-title-link" href="https://doi.org/10.1007/s00122-023-04350-4" target="_blank">Dissecting the genetic architecture of nitrogen use efficiency in maize using a multi-environment framework</a>
-          <div class="pub-authors">Mural RV, Yang J, et al.</div>
-          <div class="pub-journal">Theoretical and Applied Genetics · 2023</div>
-          <div class="pub-meta-row">
-            <a class="pub-doi-link" href="https://doi.org/10.1007/s00122-023-04350-4" target="_blank">DOI: 10.1007/s00122-023-04350-4</a>
-            <span class="pub-cite-count">🎓 <span class="cite-num" data-scholar-id="pub4">—</span> citations</span>
-            <button class="pub-cite-btn" onclick="openCiteModal('pub4')">Cite</button>
-          </div>
-        </div>
-        <div class="pub-item" data-year="2023" data-topic="computational">
-          <a class="pub-title-link" href="https://doi.org/10.1101/2023.07.15.549000" target="_blank">Machine learning approaches to genomic selection in plant breeding programs</a>
-          <div class="pub-authors">Mural RV, et al.</div>
-          <div class="pub-journal">bioRxiv · 2023</div>
-          <div class="pub-meta-row">
-            <a class="pub-doi-link" href="https://doi.org/10.1101/2023.07.15.549000" target="_blank">DOI: 10.1101/2023.07.15.549000</a>
-            <span class="pub-cite-count">🎓 <span class="cite-num" data-scholar-id="pub5">—</span> citations</span>
-            <button class="pub-cite-btn" onclick="openCiteModal('pub5')">Cite</button>
-          </div>
-        </div>
-        <div class="pub-item" data-year="2023" data-topic="phenotyping">
-          <a class="pub-title-link" href="https://doi.org/10.1016/j.fcr.2023.109000" target="_blank">High-throughput phenotyping using UAV-based multispectral imaging for field crop assessment</a>
-          <div class="pub-authors">Mural RV, et al.</div>
-          <div class="pub-journal">Field Crops Research · 2023</div>
-          <div class="pub-meta-row">
-            <a class="pub-doi-link" href="https://doi.org/10.1016/j.fcr.2023.109000" target="_blank">DOI: 10.1016/j.fcr.2023.109000</a>
-            <span class="pub-cite-count">🎓 <span class="cite-num" data-scholar-id="pub6">—</span> citations</span>
-            <button class="pub-cite-btn" onclick="openCiteModal('pub6')">Cite</button>
-          </div>
-        </div>
-        <div class="pub-item" data-year="2023" data-topic="ai-ml">
-          <a class="pub-title-link" href="https://doi.org/10.1016/j.compag.2023.108000" target="_blank">Convolutional neural networks for automated plant trait extraction from field images</a>
-          <div class="pub-authors">Mural RV, et al.</div>
-          <div class="pub-journal">Computers and Electronics in Agriculture · 2023</div>
-          <div class="pub-meta-row">
-            <a class="pub-doi-link" href="https://doi.org/10.1016/j.compag.2023.108000" target="_blank">DOI: 10.1016/j.compag.2023.108000</a>
-            <span class="pub-cite-count">🎓 <span class="cite-num" data-scholar-id="pub7">—</span> citations</span>
-            <button class="pub-cite-btn" onclick="openCiteModal('pub7')">Cite</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="pub-year-group" data-year-group="2022">
-        <div class="pub-year">2022</div>
-        <div class="pub-item" data-year="2022" data-topic="genomics">
-          <a class="pub-title-link" href="https://doi.org/10.1038/s41477-022-01100-4" target="_blank">Population structure and local adaptation in a global collection of soybean germplasm</a>
-          <div class="pub-authors">Mural RV, et al.</div>
-          <div class="pub-journal">Nature Plants · 2022</div>
-          <div class="pub-meta-row">
-            <a class="pub-doi-link" href="https://doi.org/10.1038/s41477-022-01100-4" target="_blank">DOI: 10.1038/s41477-022-01100-4</a>
-            <span class="pub-cite-count">🎓 <span class="cite-num" data-scholar-id="pub8">—</span> citations</span>
-            <button class="pub-cite-btn" onclick="openCiteModal('pub8')">Cite</button>
-          </div>
-        </div>
-      </div>
-
+    <!-- Loading spinner -->
+    <div id="pub-loading" style="padding:2rem 0; color:var(--text-muted); font-size:0.88rem;">
+      Loading publications from ORCID…
     </div>
+
+    <!-- Error banner — shown only if ORCID unreachable, static fallback renders below -->
+    <div id="pub-error" style="display:none; padding:0.8rem 1rem; background:#fff8f0;
+         border-left:3px solid var(--gold); border-radius:0 4px 4px 0;
+         font-size:0.82rem; color:#8a6000; margin-bottom:1rem;">
+      ⚠️ Could not reach ORCID — showing cached publication list.
+    </div>
+
+    <!-- Dynamic list — populated by loadPublications() in JS -->
+    <div id="pub-list-container" style="margin-top:0.5rem;"></div>
+
   </div></div>
   <footer>
     <div class="footer-center">
       <div class="footer-social-row">
-        <a class="footer-icon-link" href="/cdn-cgi/l/email-protection#92e0f3e4fbbcffe7e0f3fed2e1f6e1e6f3e6f7bcf7f6e7" title="Email"><svg><use href="#ico-email"/></svg></a>
+        <a class="footer-icon-link" href="/cdn-cgi/l/email-protection#abf9caddc285e6ded9cac7ebd8cfd8dfcadfce85cecfde" title="Email"><svg><use href="#ico-email"/></svg></a>
         <a class="footer-icon-link" href="https://github.com/murallab01" target="_blank" title="GitHub"><svg><use href="#ico-github"/></svg></a>
       </div>
       <div class="footer-logo">Mural <span>AgriOmics</span> Lab</div>
@@ -1072,7 +1015,7 @@ a, button, [onclick] { -webkit-tap-highlight-color: transparent; outline: none; 
   </footer>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ── PROFILE DATA ── */
 const profiles = {
   ermias: { name:'Ermias Assefa', initials:'EA', role:'PhD Student', bio:'Ermias is a PhD student in the Mural AgriOmics Lab focusing on quantitative genetics and genomic prediction in crop species. His research aims to build robust statistical models that can accurately predict complex traits from genomic data, with applications in maize and sorghum breeding programs.', interests:['Quantitative Genetics','Genomic Prediction','BLUP Models','Maize','Sorghum'], github:'#', linkedin:'#', orcid:'#', email:'ermias.assefa@sdstate.edu', pubs:[{title:'Thesis research in progress — publication forthcoming',journal:'Mural AgriOmics Lab · SDSU · 2025'}] },
@@ -1283,35 +1226,326 @@ function showPageWithFilter(pageId, topic) {
   }, 50);
 }
 
-/* ── CITATION DATA ── */
-const citationData = {
-  pub1: { authors:'Mural, R. V., & Assefa, E.', year:2024, title:'Genome-wide association study reveals novel loci for drought tolerance in maize', journal:'Plant Cell & Environment', volume:'47', pages:'', doi:'10.1111/pce.14000' },
-  pub2: { authors:'Mural, R. V.', year:2024, title:'Genomic prediction accuracy for yield-related traits in diverse sorghum panels', journal:'G3: Genes, Genomes, Genetics', volume:'14', pages:'', doi:'10.1093/g3journal/jkad200' },
-  pub3: { authors:'Mural, R. V.', year:2024, title:'Deep learning for genomic prediction: integrating SNP data and environmental covariates in crop breeding', journal:'Plant Phenomics', volume:'6', pages:'', doi:'10.34133/plantphenomics.0089' },
-  pub4: { authors:'Mural, R. V., & Yang, J.', year:2023, title:'Dissecting the genetic architecture of nitrogen use efficiency in maize using a multi-environment framework', journal:'Theoretical and Applied Genetics', volume:'136', pages:'1-14', doi:'10.1007/s00122-023-04350-4' },
-  pub5: { authors:'Mural, R. V.', year:2023, title:'Machine learning approaches to genomic selection in plant breeding programs', journal:'bioRxiv', volume:'', pages:'', doi:'10.1101/2023.07.15.549000' },
-  pub6: { authors:'Mural, R. V.', year:2023, title:'High-throughput phenotyping using UAV-based multispectral imaging for field crop assessment', journal:'Field Crops Research', volume:'295', pages:'108000', doi:'10.1016/j.fcr.2023.109000' },
-  pub7: { authors:'Mural, R. V.', year:2023, title:'Convolutional neural networks for automated plant trait extraction from field images', journal:'Computers and Electronics in Agriculture', volume:'210', pages:'107920', doi:'10.1016/j.compag.2023.108000' },
-  pub8: { authors:'Mural, R. V.', year:2022, title:'Population structure and local adaptation in a global collection of soybean germplasm', journal:'Nature Plants', volume:'8', pages:'412-429', doi:'10.1038/s41477-022-01100-4' },
+/* ════════════════════════════════════════════════════════════════════
+   PUBLICATION AUTO-UPDATE SYSTEM
+   ════════════════════════════════════════════════════════════════════
+
+   TWO DATA SOURCES:
+   A) ORCID API  — live publication list, fetched on every page load
+      No code changes needed to add papers — just update your ORCID.
+
+   B) data/citation_counts.json — citation counts updated monthly
+      by GitHub Actions (.github/workflows/update_citations.yml)
+      using scripts/fetch_citations.py
+
+   FALLBACK: If ORCID is unreachable, the static list below is shown.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ── ✏️  ORCID IDs ────────────────────────────────────────────────────
+   Add each lab member's ORCID here when you have it.
+   Set to null to skip. The page will merge works from all active IDs.
+   ── */
+const LAB_ORCIDS = {
+  'Dr. Ravi V. Mural':              '0000-0002-5489-9918',  // ✅ ACTIVE
+  // 🚩 TODO: fill in each person's ORCID when available
+  'Ermias Assefa':                  null,   // 🚩 add ORCID when available
+  'Shalma Maman':                   null,   // 🚩 add ORCID when available
+  'Prajwal R S':                    null,   // 🚩 add ORCID when available
+  'Muragesh Mrutyunjaya Hiremath':  null,   // 🚩 add ORCID when available
+  'Shiva Kumar Reddy Mudedla':      null,   // 🚩 add ORCID when available
+  'Preethi J Kabbakki':             null,   // 🚩 add ORCID when available
 };
+
+/* ── ✏️  TOPIC OVERRIDES ──────────────────────────────────────────────
+   ORCID doesn't store topics. Papers are auto-tagged by keyword
+   matching (see tagTopic below). Use this to manually correct any.
+   Format: 'doi-string': 'topic-slug'
+   Valid slugs: quantitative-genetics | genomics | phenotyping |
+                computational | ai-ml
+   ── */
+const TOPIC_OVERRIDES = {
+  // '10.1111/pce.14000': 'quantitative-genetics',  // example
+};
+
+/* ── AUTO TOPIC TAGGING — edit keywords to improve auto-tagging ── */
+function tagTopic(title, journal) {
+  const t = (title + ' ' + journal).toLowerCase();
+  if (/deep.learn|neural.net|machine.learn|cnn|transformer|ai |artificial.intel|random.forest/.test(t))
+    return 'ai-ml';
+  if (/phenotyp|uav|drone|imaging|lidar|multispectral|rgb|sensor/.test(t))
+    return 'phenotyping';
+  if (/gwas|qtl|genomic.pred|association.stud|heritab|mixed.model|blup|genomic.select/.test(t))
+    return 'quantitative-genetics';
+  if (/population.genom|transcriptom|snp|whole.genome|sequenc|variant|gene.expres/.test(t))
+    return 'genomics';
+  if (/pipeline|bioinformat|software|algorithm|python|r.package|computational/.test(t))
+    return 'computational';
+  return 'quantitative-genetics'; // default
+}
+
+/* ── citationData — built dynamically, also used by Cite modal ── */
+let citationData = {};
 let currentCitePub = null;
 
+/* ── FETCH citation counts from data/citation_counts.json ────────────
+   Written monthly by GitHub Action. Keys = DOIs, values = counts.
+   Silent fail — counts stay as "—" if file not found yet. ── */
+async function fetchCitationCounts() {
+  try {
+    const r = await fetch('data/citation_counts.json?_=' + Date.now());
+    if (!r.ok) return {};
+    return await r.json();
+  } catch(e) { return {}; }
+}
+
+/* ── FETCH publication list from ORCID public API ── */
+async function fetchOrcidWorks(orcidId) {
+  try {
+    const r = await fetch(
+      'https://pub.orcid.org/v3.0/' + orcidId + '/works',
+      { headers: { 'Accept': 'application/json' } }
+    );
+    if (!r.ok) throw new Error('ORCID ' + r.status);
+    const data = await r.json();
+    return data.group || [];
+  } catch(e) {
+    console.warn('ORCID fetch error for', orcidId, e);
+    return null; // null = failed (vs [] = empty profile)
+  }
+}
+
+/* ── PARSE one ORCID work group into a clean object ── */
+async function parseOrcidWork(group, orcidId) {
+  const summary = group['work-summary'] && group['work-summary'][0];
+  if (!summary) return null;
+
+  const title   = (summary.title && summary.title.title && summary.title.title.value) || 'Untitled';
+  const yearVal = summary['publication-date'] && summary['publication-date'].year;
+  const year    = yearVal ? parseInt(yearVal.value) : 0;
+  const journal = (summary['journal-title'] && summary['journal-title'].value) || '';
+  const type    = summary.type || 'JOURNAL_ARTICLE';
+
+  // Extract DOI from external IDs
+  let doi = '';
+  const extIds = (summary['external-ids'] && summary['external-ids']['external-id']) || [];
+  for (const eid of extIds) {
+    if (eid['external-id-type'] === 'doi') {
+      doi = eid['external-id-value']
+              .replace(/^https?:\/\/(dx\.)?doi\.org\//i, '')
+              .toLowerCase().trim();
+      break;
+    }
+  }
+
+  // Author string — default to PI name, try to fetch detail for full list
+  let authors = 'Mural RV, et al.';
+  try {
+    if (summary['put-code'] && orcidId === '0000-0002-5489-9918') {
+      const dr = await fetch(
+        'https://pub.orcid.org/v3.0/' + orcidId + '/work/' + summary['put-code'],
+        { headers: { 'Accept': 'application/json' } }
+      );
+      if (dr.ok) {
+        const detail = await dr.json();
+        const contribs = (detail.contributors && detail.contributors.contributor) || [];
+        const names = contribs
+          .map(ct => ct['credit-name'] && ct['credit-name'].value)
+          .filter(Boolean);
+        if (names.length) authors = names.join(', ');
+      }
+    }
+  } catch(e) { /* keep default */ }
+
+  const badgeType = type === 'PREPRINT' ? 'Preprint'
+                  : type === 'BOOK_CHAPTER' ? 'Chapter' : 'Journal';
+
+  return { title, year, journal, doi, authors, badgeType };
+}
+
+/* ── BUILD HTML for one publication ── */
+function buildPubHTML(pub, pubId, citCount) {
+  const topic  = TOPIC_OVERRIDES[pub.doi] || tagTopic(pub.title, pub.journal);
+  const doiUrl = pub.doi ? 'https://doi.org/' + pub.doi : '#';
+  const citeDisplay = (citCount !== undefined && citCount !== null) ? citCount : '—';
+
+  // Register in citationData for Cite modal
+  citationData[pubId] = {
+    authors: pub.authors, year: pub.year, title: pub.title,
+    journal: pub.journal, volume: '', pages: '', doi: pub.doi
+  };
+
+  return '<div class="pub-item" data-year="' + pub.year + '" data-topic="' + topic + '">'
+    + '<a class="pub-title-link" href="' + doiUrl + '" target="_blank">' + pub.title + '</a>'
+    + '<div class="pub-authors">' + pub.authors + '</div>'
+    + '<div class="pub-journal">' + pub.journal + (pub.year ? ' \xb7 ' + pub.year : '') + '</div>'
+    + '<div class="pub-meta-row">'
+    + (pub.doi ? '<a class="pub-doi-link" href="' + doiUrl + '" target="_blank">DOI: ' + pub.doi + '</a>' : '')
+    + '<span class="pub-cite-count">\ud83c\udf93 <span class="cite-num" data-pub-id="' + pubId + '">' + citeDisplay + '</span> citations</span>'
+    + '<button class="pub-cite-btn" onclick="openCiteModal(\'' + pubId + '\')">Cite</button>'
+    + '</div></div>';
+}
+
+/* ── REBUILD year dropdown from actual years in data ── */
+function rebuildYearFilter(years) {
+  const sel = document.getElementById('year-select');
+  if (!sel) return;
+  const unique = [...new Set(years)].filter(Boolean).sort((a,b) => b - a);
+  sel.innerHTML = '<option value="all">All Years</option>'
+    + unique.map(y => '<option value="' + y + '">' + y + '</option>').join('');
+}
+
+/* ── MAIN LOAD FUNCTION ── */
+async function loadPublications() {
+  const container = document.getElementById('pub-list-container');
+  const loading   = document.getElementById('pub-loading');
+  const errorBox  = document.getElementById('pub-error');
+  if (!container) return;
+
+  // Load citation counts from JSON (GitHub Action writes this monthly)
+  const citCounts = await fetchCitationCounts();
+
+  // Fetch from all active ORCID IDs
+  // 🚩 When you add more ORCIDs to LAB_ORCIDS above, they are
+  //    automatically included here — no other changes needed.
+  let allPubs = [];
+  let anyFailed = false;
+
+  for (const [name, orcidId] of Object.entries(LAB_ORCIDS)) {
+    if (!orcidId) continue; // skip placeholders
+    const groups = await fetchOrcidWorks(orcidId);
+    if (groups === null) { anyFailed = true; continue; }
+
+    const parsed = await Promise.all(groups.map(g => parseOrcidWork(g, orcidId)));
+    allPubs = allPubs.concat(parsed.filter(p => p && p.year > 0));
+  }
+
+  if (loading) loading.style.display = 'none';
+
+  // Deduplicate by DOI
+  const seen = new Set();
+  allPubs = allPubs.filter(p => {
+    const key = p.doi || (p.title + p.year);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).sort((a,b) => b.year - a.year);
+
+  if (allPubs.length === 0) {
+    if (errorBox) errorBox.style.display = 'block';
+    renderStaticFallback(container, citCounts);
+    return;
+  }
+
+  if (anyFailed && errorBox) errorBox.style.display = 'block';
+
+  // Rebuild year filter from real data
+  rebuildYearFilter(allPubs.map(p => p.year));
+
+  // Group by year and render
+  const byYear = {};
+  allPubs.forEach((pub, i) => {
+    if (!byYear[pub.year]) byYear[pub.year] = [];
+    byYear[pub.year].push({ pub, id: 'orcid_' + i });
+  });
+
+  let html = '';
+  Object.keys(byYear).sort((a,b) => b - a).forEach(year => {
+    html += '<div class="pub-year-group" data-year-group="' + year + '">'
+          + '<div class="pub-year">' + year + '</div>';
+    byYear[year].forEach(({ pub, id }) => {
+      html += buildPubHTML(pub, id, pub.doi ? citCounts[pub.doi] : undefined);
+    });
+    html += '</div>';
+  });
+
+  container.innerHTML = html;
+  applyFilter();
+}
+
+/* ── STATIC FALLBACK ─────────────────────────────────────────────────
+   Shown if ORCID is unreachable.
+   ✏️  Keep this list in sync with your ORCID profile as a backup.
+   ── */
+function renderStaticFallback(container, citCounts) {
+  // ✏️  UPDATE when you add new publications
+  const staticPubs = [
+    { title:'Genome-wide association study reveals novel loci for drought tolerance in maize',
+      authors:'Mural RV, Assefa E, et al.', journal:'Plant Cell & Environment',
+      year:2024, doi:'10.1111/pce.14000', badgeType:'Journal' },
+    { title:'Genomic prediction accuracy for yield-related traits in diverse sorghum panels',
+      authors:'Mural RV, et al.', journal:'G3: Genes, Genomes, Genetics',
+      year:2024, doi:'10.1093/g3journal/jkad200', badgeType:'Journal' },
+    { title:'Deep learning for genomic prediction: integrating SNP data and environmental covariates in crop breeding',
+      authors:'Mural RV, et al.', journal:'Plant Phenomics',
+      year:2024, doi:'10.34133/plantphenomics.0089', badgeType:'Journal' },
+    { title:'Dissecting the genetic architecture of nitrogen use efficiency in maize using a multi-environment framework',
+      authors:'Mural RV, Yang J, et al.', journal:'Theoretical and Applied Genetics',
+      year:2023, doi:'10.1007/s00122-023-04350-4', badgeType:'Journal' },
+    { title:'Machine learning approaches to genomic selection in plant breeding programs',
+      authors:'Mural RV, et al.', journal:'bioRxiv',
+      year:2023, doi:'10.1101/2023.07.15.549000', badgeType:'Preprint' },
+    { title:'High-throughput phenotyping using UAV-based multispectral imaging for field crop assessment',
+      authors:'Mural RV, et al.', journal:'Field Crops Research',
+      year:2023, doi:'10.1016/j.fcr.2023.109000', badgeType:'Journal' },
+    { title:'Convolutional neural networks for automated plant trait extraction from field images',
+      authors:'Mural RV, et al.', journal:'Computers and Electronics in Agriculture',
+      year:2023, doi:'10.1016/j.compag.2023.108000', badgeType:'Journal' },
+    { title:'Population structure and local adaptation in a global collection of soybean germplasm',
+      authors:'Mural RV, et al.', journal:'Nature Plants',
+      year:2022, doi:'10.1038/s41477-022-01100-4', badgeType:'Journal' },
+  ];
+
+  rebuildYearFilter(staticPubs.map(p => p.year));
+
+  const byYear = {};
+  staticPubs.forEach((pub, i) => {
+    if (!byYear[pub.year]) byYear[pub.year] = [];
+    byYear[pub.year].push({ pub, id: 'static_' + i });
+  });
+
+  let html = '';
+  Object.keys(byYear).sort((a,b) => b - a).forEach(year => {
+    html += '<div class="pub-year-group" data-year-group="' + year + '">'
+          + '<div class="pub-year">' + year + '</div>';
+    byYear[year].forEach(({ pub, id }) => {
+      html += buildPubHTML(pub, id, pub.doi ? citCounts[pub.doi] : undefined);
+    });
+    html += '</div>';
+  });
+
+  container.innerHTML = html;
+  applyFilter();
+}
+
+/* ── CITATION MODAL FUNCTIONS ── */
 function formatCitation(id, fmt) {
-  const p = citationData[id]; if (!p) return '';
+  const p = citationData[id];
+  if (!p) return 'Citation data not available.';
   const doi = p.doi ? 'https://doi.org/' + p.doi : '';
   switch(fmt) {
     case 'apa':
-      return p.authors+' ('+p.year+'). '+p.title+'. '+p.journal+(p.volume?', '+p.volume:'')+(p.pages?', '+p.pages:'')+'. '+doi;
+      return p.authors + ' (' + p.year + '). ' + p.title + '. ' + p.journal
+           + (p.volume ? ', ' + p.volume : '') + (p.pages ? ', ' + p.pages : '') + '. ' + doi;
     case 'mla':
-      return p.authors+' "'+p.title+'." '+p.journal+(p.volume?' '+p.volume:'')+' ('+p.year+'): '+(p.pages||'n.p.')+'. '+doi;
+      return p.authors + ' "' + p.title + '." ' + p.journal
+           + (p.volume ? ' ' + p.volume : '') + ' (' + p.year + '): '
+           + (p.pages || 'n.p.') + '. ' + doi;
     case 'chicago':
-      return p.authors+'. "'+p.title+'." '+p.journal+(p.volume?' '+p.volume:'')+' ('+p.year+'): '+(p.pages||'n.p.')+'. '+doi+'.';
+      return p.authors + '. "' + p.title + '." ' + p.journal
+           + (p.volume ? ' ' + p.volume : '') + ' (' + p.year + '): '
+           + (p.pages || 'n.p.') + '. ' + doi + '.';
     case 'bibtex': {
-      const key = 'mural'+p.year+p.title.split(' ')[0].toLowerCase();
-      return '@article{'+key+',\n  author  = {'+p.authors+'},\n  title   = {'+p.title+'},\n  journal = {'+p.journal+'},\n  year    = {'+p.year+'},\n  volume  = {'+(p.volume||'')+'},\n  pages   = {'+(p.pages||'')+'},\n  doi     = {'+(p.doi||'')+'}\n}';
+      const key = 'mural' + p.year + p.title.split(' ')[0].toLowerCase();
+      return '@article{' + key + ',\n  author  = {' + p.authors + '},\n  title   = {' + p.title
+           + '},\n  journal = {' + p.journal + '},\n  year    = {' + p.year
+           + '},\n  volume  = {' + (p.volume||'') + '},\n  pages   = {' + (p.pages||'')
+           + '},\n  doi     = {' + (p.doi||'') + '}\n}';
     }
     case 'ris':
-      return 'TY  - JOUR\nAU  - '+p.authors+'\nPY  - '+p.year+'\nTI  - '+p.title+'\nJO  - '+p.journal+'\nVL  - '+(p.volume||'')+'\nSP  - '+(p.pages||'')+'\nDO  - '+(p.doi||'')+'\nER  -';
+      return 'TY  - JOUR\nAU  - ' + p.authors + '\nPY  - ' + p.year
+           + '\nTI  - ' + p.title + '\nJO  - ' + p.journal
+           + '\nVL  - ' + (p.volume||'') + '\nSP  - ' + (p.pages||'')
+           + '\nDO  - ' + (p.doi||'') + '\nER  -';
     default: return '';
   }
 }
@@ -1342,25 +1576,8 @@ function closeCiteModalBtn() {
   document.body.style.overflow = '';
 }
 
-/* ── GOOGLE SCHOLAR CITATION COUNTS ── */
-function loadCitationCounts() {
-  const id = '5NlUnZ0AAAAJ';
-  fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://scholar.google.com/citations?user='+id+'&hl=en&sortby=pubdate'))
-    .then(r => r.json())
-    .then(data => {
-      if (!data.contents) return;
-      const doc = new DOMParser().parseFromString(data.contents, 'text/html');
-      doc.querySelectorAll('.gsc_a_tr').forEach((row, i) => {
-        const citeEl = row.querySelector('.gsc_a_c a');
-        const num = citeEl ? parseInt(citeEl.textContent.trim()) : NaN;
-        const el = document.querySelector('.cite-num[data-scholar-id="pub'+(i+1)+'"]');
-        if (el && !isNaN(num)) el.textContent = num;
-      });
-    }).catch(() => {});
-}
-
 /* ── INIT ── */
-document.addEventListener('DOMContentLoaded', () => { loadCitationCounts(); });
+document.addEventListener('DOMContentLoaded', () => { loadPublications(); });
 (function() {
   const hash = location.hash.replace('#','') || 'home';
   if (document.getElementById('page-'+hash)) showPage(hash, false);
@@ -1509,4 +1726,10 @@ document.addEventListener('DOMContentLoaded', () => { loadCitationCounts(); });
         <a class="footer-icon-link" href="https://github.com/murallab01" target="_blank" title="GitHub"><svg><use href="#ico-github"/></svg></a>
       </div>
       <div class="footer-logo">Mural <span>AgriOmics</span> Lab</div>
-      <div class="footer-dept">Department of Agronomy, Horticulture and Plant Science &nbsp;·&nbsp; South Dakota State University &nbsp;·&nbsp; Brookings, South Dakota 57007</di
+    </div>
+    <div class="footer-bottom" style="text-align:right;padding-right:2rem;"><div class="footer-text">Â© 2025 Mural AgriOmics Lab Â· SDSU</div></div>
+  </footer>
+</div>
+
+</body>
+</html>
